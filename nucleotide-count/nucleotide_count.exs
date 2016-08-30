@@ -1,6 +1,12 @@
 defmodule NucleotideCount do
   @nucleotides [?A, ?C, ?G, ?T]
 
+  def validate_nucleotide(nucleotide) do
+    unless Enum.member?([?A, ?T, ?C, ?G], nucleotide) do
+      raise ArgumentError
+    end
+  end
+
   @doc """
   Counts individual nucleotides in a NucleotideCount strand.
 
@@ -31,12 +37,6 @@ defmodule NucleotideCount do
     total
   end
 
-  def validate_nucleotide(nucleotide) do
-    unless Enum.member?([?A, ?T, ?C, ?G], nucleotide) do
-      raise ArgumentError
-    end
-  end
-
 
   @doc """
   Returns a summary of counts by nucleotide.
@@ -47,31 +47,20 @@ defmodule NucleotideCount do
   %{?A => 4, ?T => 1, ?C => 0, ?G => 0}
   """
   @spec histogram([char]) :: map
-  def histogram(strand) do
+  def histogram(strand) do 
     histogram(strand, %{?A => 0, ?T => 0, ?C => 0, ?G => 0})
   end
 
-  def histogram([?A | strand], hist) do
-    histogram(strand, %{?A => hist[?A] + 1, ?T => hist[?T], ?C => hist[?C], ?G => hist[?G]})
-  end
-
-  def histogram([?T | strand], hist) do
-    histogram(strand, %{?A => hist[?A], ?T => hist[?T] + 1, ?C => hist[?C], ?G => hist[?G]})
-  end
-
-  def histogram([?C | strand], hist) do
-    histogram(strand, %{?A => hist[?A], ?T => hist[?T], ?C => hist[?C] + 1, ?G => hist[?G]})
-  end
-
-  def histogram([?G | strand], hist) do
-    histogram(strand, %{?A => hist[?A], ?T => hist[?T], ?C => hist[?C], ?G => hist[?G] + 1})
-  end
-
-  def histogram([_ | strand], hist) do
-    raise ArgumentError
+  def histogram([nucleotide | strand], hist) do
+    validate_nucleotide(nucleotide)
+    histogram(strand, increment_histogram(hist, nucleotide))
   end
 
   def histogram([], hist) do
     hist
+  end
+
+  def increment_histogram(hist, nucleotide) do
+    %{hist | nucleotide => hist[nucleotide] + 1}
   end
 end
