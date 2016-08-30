@@ -1,10 +1,6 @@
 defmodule HelloWorld do
 
-  def hello do
-    hello("World")
-  end
-
-  def hello(name) do
+  def hello(name \\ "World") do
     "Hello, #{name}!"
   end
 end
