@@ -20,17 +20,21 @@ defmodule TwelveDays do
   """
   @spec verse(number :: integer) :: String.t()
   def verse(number) do
-    strings = ["On the #{@days[number].ordinal} day of Christmas my true love gave to me"]
+    first_part = "On the #{@days[number].ordinal} day of Christmas my true love gave to me"
 
     gifts = case number do
-      1 -> [@days[1].gift]
+      1 -> [gift(1)]
       _ -> (number..2
-           |> Enum.map(fn(month) -> @days[month].gift end))
-           ++ ["and #{@days[1].gift}"]
+           |> Enum.map(fn(month) -> gift(month) end))
+           ++ ["and #{gift(month)}"]
     end
 
-    (strings ++ gifts)
+    [first_part | gifts]
     |> Enum.join(", ")
+  end
+
+  def gift(month) do
+    @days[month].gift
   end
 
   @doc """
