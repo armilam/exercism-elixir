@@ -22,7 +22,6 @@ defmodule TwelveDays do
   def verse(number) do
     strings = ["On the #{@days[number].ordinal} day of Christmas my true love gave to me"]
 
-
     gifts = case number do
       1 -> [@days[1].gift]
       _ -> (number..2
@@ -40,6 +39,9 @@ defmodule TwelveDays do
   """
   @spec verses(starting_verse :: integer, ending_verse :: integer) :: String.t()
   def verses(starting_verse, ending_verse) do
+    starting_verse..ending_verse
+    |> Enum.map(fn(number) -> verse(number) end)
+    |> Enum.join("\n")
   end
 
   @doc """
@@ -47,5 +49,6 @@ defmodule TwelveDays do
   """
   @spec sing() :: String.t()
   def sing do
+    verses(1, 12)
   end
 end
